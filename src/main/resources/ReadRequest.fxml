@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="412.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.ControllerRequest">
+   <children>
+      <Button fx:id="PeriodicButton" layoutX="178.0" layoutY="361.0" mnemonicParsing="false" onAction="#periodicJsonRequest" text="Periodic" />
+      <Button layoutX="278.0" layoutY="361.0" mnemonicParsing="false" onAction="#onceJsonRequest" text="Once" />
+      <Button layoutX="354.0" layoutY="361.0" mnemonicParsing="false" onAction="#cancelJsonRequest" text="Cancel" />
+      <ListView fx:id="selectionRecordElementList" layoutX="10.0" layoutY="7.0" onMouseClicked="#listItemClicked" prefHeight="309.0" prefWidth="583.0" />
+      <Text fx:id="pathField" layoutX="10.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="582.99999833107" />
+   </children>
+</AnchorPane>

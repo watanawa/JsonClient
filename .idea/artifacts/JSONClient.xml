@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JSONClient">
+    <output-path>$USER_HOME$/Desktop/JSONClient</output-path>
+    <root id="archive" name="JSONClient.jar">
+      <element id="module-output" name="JsonClient_main" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
