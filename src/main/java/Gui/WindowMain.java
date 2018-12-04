@@ -10,9 +10,9 @@ public class WindowMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("WindowMain.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Gui/WindowMain.fxml"));
         primaryStage.setTitle("JSON Client Application");
-        primaryStage.setScene(new Scene(root, 900, 500));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 

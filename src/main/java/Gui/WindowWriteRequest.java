@@ -10,9 +10,9 @@ public class WindowWriteRequest extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("WriteRequest.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Gui/WriteRequest.fxml"));
         primaryStage.setTitle("JSONDebugDataWriteRequest");
-        primaryStage.setScene(new Scene(root, 500, 200));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 

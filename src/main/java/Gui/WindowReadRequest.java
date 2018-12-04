@@ -9,9 +9,9 @@ import javafx.stage.Stage;
 public class WindowReadRequest extends Application {
     @Override
     public void start(Stage subStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ReadRequest.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Gui/ReadRequest.fxml"));
         subStage.setTitle("JSONDebugDataReadRequest");
-        subStage.setScene(new Scene(root, 500, 200));
+        subStage.setScene(new Scene(root));
         subStage.show();
     }
 

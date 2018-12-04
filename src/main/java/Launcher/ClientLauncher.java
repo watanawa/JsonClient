@@ -2,6 +2,7 @@ package Launcher;
 
 import Gui.DsfHandler;
 import Gui.WindowMain;
+import Help.Interface;
 import UDP.MessageHandler;
 import UDP.UDPReceiver;
 import UDP.UDPSender;
@@ -33,6 +34,7 @@ public class ClientLauncher {
         launcher.createUDPReceiver();
         launcher.unmarshall();
         launcher.initializeDsfHandler();
+        launcher.initializeInterface();
         launcher.buildGUI();
         //launcher.waitForInput();
         //launcher.sendRequests();
@@ -60,43 +62,7 @@ public class ClientLauncher {
     public void createMessageHandler(){
         messageHandler = new MessageHandler(sender);
     }
-    public void waitForInput(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Waiting for the input of the recordelement path ");
-        System.out.println("Continue with NEWRECORDELEMENT or FINISH to stop adding new elements");
-        boolean scanning = true;
-        LinkedList<String> recordElementPath = new LinkedList<>();
-        while(scanning ){
-            String temp = scanner.next();
-            if(temp.equalsIgnoreCase("Finish")){
-                messageHandler.addRecordElementPath(recordElementPath);
-                System.out.println("################");
-                System.out.println("CLOSING THE INPUT");
-                System.out.println("################");
-                scanning = false;
 
-            }
-            else if(temp.equalsIgnoreCase("NewRecordElement")){
-                messageHandler.addRecordElementPath(recordElementPath);
-                recordElementPath = new LinkedList<>();
-                System.out.println();
-                System.out.println("################");
-                System.out.println("PLEASE INPUT A NEW RECORDELMENT PATH");
-                System.out.println("################");
-            }else{
-                recordElementPath.add(temp);
-            }
-
-        }
-        scanner.close();
-
-    }
-    public void sendRequests(){
-        System.out.println("################");
-        System.out.println("SENDING REQUESTS");
-        System.out.println("################");
-        messageHandler.sendRequests();
-    }
     public void unmarshall(){
         Unmarshaller unmarshaller = new Unmarshaller();
         typeEquipmentDescription = unmarshaller.unmarshal(new File(path));
@@ -104,6 +70,11 @@ public class ClientLauncher {
     public void initializeDsfHandler(){
         DsfHandler.setTypeEquipmentDescription(typeEquipmentDescription);
     }
+    public void initializeInterface(){
+        Interface.setSender(sender);
+        Interface.setTypeEquipmentDescription(typeEquipmentDescription);
+    }
+
     public void buildGUI(){
         WindowMain.main(null);
     }

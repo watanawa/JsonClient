@@ -1,5 +1,6 @@
 package Gui;
 
+import Help.Element;
 import dsf.TypeCompilationUnit;
 import dsf.TypeDebugSymbolSet;
 import dsf.TypeEquipmentDescription;
@@ -12,99 +13,41 @@ public class DsfHandler {
 
     private static TypeDebugSymbolSet typeDebugSymbolSet;
 
-    private class Element{
-        String name;
-        String dataTypeId;
-         Element(String name, String id){
-            this.name = name;
-            this.dataTypeId = id;
-        }
-
-        public String getDataTypeId() {
-            return dataTypeId;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
     public static void setTypeEquipmentDescription(TypeEquipmentDescription typeEquipmentDescription){
         typeDebugSymbolSet = typeEquipmentDescription.getDebugSymbols().getDebugSymbolSet().get(0);
     }
 
-    public static LinkedList<String> getVariables(){
-        LinkedList<String> list = new LinkedList<>();
+    public static LinkedList<Element> getVariables(){
+        LinkedList<Element> list = new LinkedList<>();
         for(TypeCompilationUnit compilationUnit : typeDebugSymbolSet.getCompilationUnit()){
             for(Object object : compilationUnit.getVariableAndCharacterDataTypeAndBooleanDataType()){
                 if(getDataType(object).equals("VARIABLE")){
                     TypeCompilationUnit.Variable variable =(TypeCompilationUnit.Variable) object;
-                    list.add(variable.getName());
+                    list.addFirst(new Element(variable.getName(), variable.getDataTypeId(), variable, compilationUnit));
                 }
             }
         }
-        Collections.sort(list);
+
         return list;
     }
 
-    public static LinkedList<String> getElements(LinkedList<String> path) {
-        String variableName = path.getFirst();
-        LinkedList<String> list = new LinkedList<>();
+    public static LinkedList<Element> getElements(LinkedList<Element> path) {
+        String variableName = path.getFirst().getName();
+        LinkedList<Element> list = new LinkedList<>();
         TypeCompilationUnit scope = null;
         String dataTypeId = null;
         //Determine the scope
-        for (TypeCompilationUnit compilationUnit : typeDebugSymbolSet.getCompilationUnit()) {
-            for (Object object : compilationUnit.getVariableAndCharacterDataTypeAndBooleanDataType()) {
-                if (getDataType(object).equals("VARIABLE")) {
-                    TypeCompilationUnit.Variable variable = (TypeCompilationUnit.Variable) object;
-                    if (variable.getName().equals(variableName)) {
-                        scope = compilationUnit;
-                        if(path.size() == 1){
-                            dataTypeId = variable.getDataTypeId();
-                        }
-                        break;
-                    }
-                }
-            }
-        }
+        dataTypeId = path.getLast().getDataTypeId();
+        scope = path.getLast().getCompilationUnit();
         boolean lastIsIndex = false;
         if (scope != null) {
-            if (path.getLast().equals("\\d+")) {
+            if (path.getLast().getName().equals("\\d+")) {
                 lastIsIndex = true;
-                for (Object object : scope.getVariableAndCharacterDataTypeAndBooleanDataType()) {
-                    if (getDataType(object).equals("RECORD")) {
-                        TypeCompilationUnit.RecordDataType recordDataType = (TypeCompilationUnit.RecordDataType) object;
-                        for(TypeCompilationUnit.RecordDataType.RecordElement recordElement: recordDataType.getRecordElement()){
-                            if (recordElement.getName().equals(path.getLast())) {
-                                dataTypeId = recordDataType.getId();
-                                break;
-                            }
-                        }
-                    }
-                }
+                dataTypeId = path.get(path.size()-2).getDataTypeId();
             }
             //DETERMINE THE DATATYPE ID OF THE LAST STRING
             else {
-                for (Object object : scope.getVariableAndCharacterDataTypeAndBooleanDataType()) {
-                    switch (getDataType(object)) {
-                        case "VARIABLE":
-                            TypeCompilationUnit.Variable variableDataType = (TypeCompilationUnit.Variable) object;
-                            if (variableDataType.getName().equals(path.getLast())) {
-                                dataTypeId = variableDataType.getDataTypeId();
-                                break;
-                            }
-                            break;
-                        case "RECORD":
-                            TypeCompilationUnit.RecordDataType recordDataType = (TypeCompilationUnit.RecordDataType) object;
-                            for(TypeCompilationUnit.RecordDataType.RecordElement recordElement: recordDataType.getRecordElement()){
-                                if (recordElement.getName().equals(path.getLast())) {
-                                    dataTypeId = recordElement.getDataTypeId();
-                                    break;
-                                }
-                            }
-                            break;
-                    }
-                }
+                dataTypeId = path.getLast().getDataTypeId();
             }
         }
         for (Object object : scope.getVariableAndCharacterDataTypeAndBooleanDataType()) {
@@ -112,7 +55,8 @@ public class DsfHandler {
                 TypeCompilationUnit.RecordDataType recordDataType = (TypeCompilationUnit.RecordDataType) object;
                 if(recordDataType.getId().equals(dataTypeId)){
                     for(TypeCompilationUnit.RecordDataType.RecordElement recordElement :recordDataType.getRecordElement()){
-                        list.add(recordElement.getName());
+                        list.add(new Element(recordElement.getName(), recordElement.getDataTypeId(), recordElement,scope));
+
                     }
                 }
             }
@@ -126,7 +70,7 @@ public class DsfHandler {
                                     TypeCompilationUnit.RecordDataType recordDataType = (TypeCompilationUnit.RecordDataType) subobject;
                                     if(recordDataType.getId().equals(dataTypeId)){
                                         for(TypeCompilationUnit.RecordDataType.RecordElement recordElement :recordDataType.getRecordElement()){
-                                            list.add(recordElement.getName());
+                                            list.add(new Element(recordElement.getName(), recordElement.getDataTypeId(), recordElement, scope));
                                         }
                                     }
                                 }
@@ -134,15 +78,13 @@ public class DsfHandler {
                         }else
                         {
                             for(int i = 0; i<= listDataType.getListIndex().get(0).getRangeUpper().intValue(); i++) {
-                                list.add(String.valueOf(i));
+                                list.add(new Element(String.valueOf(i), listDataType.getListElement().getDataTypeId(), listDataType.getListElement(), scope));
                             }
                         }
                     }
 
             }
         }
-
-
         return list;
     }
 
