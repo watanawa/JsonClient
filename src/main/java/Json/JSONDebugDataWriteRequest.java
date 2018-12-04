@@ -12,7 +12,7 @@ public class JSONDebugDataWriteRequest {
     public JSONDebugDataWriteRequest(){
         jsonDebugDataWriteRequestObject = new JSONObject();
         data = new JSONArray();
-        jsonDebugDataWriteRequestObject.put("JSONDebugDataReadRequest", data);
+        jsonDebugDataWriteRequestObject.put("JSONDebugDataWriteRequest", data);
     }
 
     public void addRecordElement(LinkedList<String> list, Object object){
