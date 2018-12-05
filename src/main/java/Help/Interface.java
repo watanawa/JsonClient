@@ -37,7 +37,7 @@ public class Interface {
 
     public static void setJsonDebugDataMessage(JSONDebugDataMessage jsonDebugDataMessage) {
         Interface.jsonDebugDataMessage = jsonDebugDataMessage;
-        setTimeStamp(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+        setTimeStamp(new SimpleDateFormat("HH:mm:ss:SSS").format(new Date()));
     }
 
     public static String getTime() {

@@ -57,6 +57,7 @@ public class ClientLauncher {
             socket = new DatagramSocket(port);
         } catch (SocketException e) {
             e.printStackTrace();
+            System.exit(0);
         }
     }
     public void createMessageHandler(){

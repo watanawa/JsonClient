@@ -4,6 +4,7 @@ package Gui;
 import Help.Interface;
 import Json.JSONDebugDataMessage;
 import UDP.UDPSender;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,12 +29,17 @@ public class ControllerMain {
     @FXML
     private TextField timeField = new TextField();
 
+
+
+    private TreeUpdateThread treeUpdateThread;
     public ControllerMain() {
     }
 
     @FXML
     public void initialize() {
-        this.updateButton.setText("Update");
+        this.updateButton.setText("Resume");
+        treeUpdateThread = new TreeUpdateThread(viewer, timeField);
+        treeUpdateThread.start();
     }
 
     public void createJSONDebugDataReadRequest() {
@@ -67,53 +73,17 @@ public class ControllerMain {
         subStage.show();
     }
 
-    public void updateTree() {
-        JSONDebugDataMessage jsonDebugDataMessage = Interface.getJsonDebugDataMessage();
-        TreeItem treeRoot = new TreeItem("JSONDebugDataMessage");
-        if (jsonDebugDataMessage != null) {
-            JSONObject jsonObject = jsonDebugDataMessage.getJsonDebugDataObject().getJSONObject("JSONDebugDataMessage");
-            this.assembleTreeItem(jsonObject, treeRoot);
-        }
-
-        this.expandTreeView(treeRoot);
-        this.viewer.setRoot(treeRoot);
-        this.viewer.refresh();
-    }
-
     public void buttonClicked() {
-        this.updateTree();
-        if (Interface.getTime() != null) {
-            this.timeField.setText(Interface.getTime().toString());
+        updateButton.setText("Test");
+        if(treeUpdateThread.isWorking()){
+            treeUpdateThread.setWorking(false);
+            updateButton.setText("Resume");
         }
-
+        else{
+            treeUpdateThread.setWorking(true);
+            updateButton.setText("Pause");
+        }
     }
 
-    private void assembleTreeItem(JSONObject object, TreeItem treeItem) {
-        TreeItem subTreeItem;
-        for(Iterator iterator = object.keys(); iterator.hasNext(); treeItem.getChildren().add(subTreeItem)) {
-            String key = (String)iterator.next();
-            subTreeItem = new TreeItem(key);
-            if (object.get(key) instanceof JSONObject) {
-                this.assembleTreeItem((JSONObject)object.get(key), subTreeItem);
-            } else {
-                TreeItem valueItem = new TreeItem(object.get(key));
-                subTreeItem.getChildren().add(valueItem);
-            }
-        }
-
-    }
-
-    private void expandTreeView(TreeItem<?> item) {
-        if (item != null && !item.isLeaf()) {
-            item.setExpanded(true);
-            Iterator var2 = item.getChildren().iterator();
-
-            while(var2.hasNext()) {
-                TreeItem<?> child = (TreeItem)var2.next();
-                this.expandTreeView(child);
-            }
-        }
-
-    }
 }
 

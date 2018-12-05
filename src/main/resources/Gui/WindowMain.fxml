@@ -21,7 +21,7 @@
         </menus>
       </MenuBar>
       <TreeView fx:id="viewer" layoutX="5.0" layoutY="31.0" prefHeight="324.0" prefWidth="580.0" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
-      <Button layoutX="274.0" layoutY="364.0" mnemonicParsing="false" onMouseClicked="#buttonClicked" text="Update" />
+      <Button fx:id="updateButton" layoutX="274.0" layoutY="364.0" mnemonicParsing="false" onMouseClicked="#buttonClicked" prefHeight="25.0" prefWidth="81.0" text="Pause" />
       <TextField fx:id="timeField" layoutX="10.0" layoutY="364.0" prefHeight="25.0" prefWidth="261.0" />
    </children>
 </AnchorPane>
