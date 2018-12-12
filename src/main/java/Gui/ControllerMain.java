@@ -37,7 +37,7 @@ public class ControllerMain {
 
     @FXML
     public void initialize() {
-        this.updateButton.setText("Resume");
+        this.updateButton.setText("Pause");
         treeUpdateThread = new TreeUpdateThread(viewer, timeField);
         treeUpdateThread.start();
     }

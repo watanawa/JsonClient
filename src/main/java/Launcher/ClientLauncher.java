@@ -3,6 +3,9 @@ package Launcher;
 import Gui.DsfHandler;
 import Gui.WindowMain;
 import Help.Interface;
+import Json.JSONDebugDataMessage;
+import Json.JSONDebugDataReadRequest;
+import Json.JSONDebugDataWriteRequest;
 import UDP.MessageHandler;
 import UDP.UDPReceiver;
 import UDP.UDPSender;
@@ -12,6 +15,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -35,10 +39,52 @@ public class ClientLauncher {
         launcher.unmarshall();
         launcher.initializeDsfHandler();
         launcher.initializeInterface();
+        if(args.length == 4 && args[3].equalsIgnoreCase("loopitems")){
+            launcher.requestLoopItems();
+        }
         launcher.buildGUI();
         //launcher.waitForInput();
         //launcher.sendRequests();
     }
+
+    private void requestLoopItems() {
+        LinkedList<String> position = new LinkedList<>();
+        position.add("Periodic");
+        position.add("SIM_AhrsGpsModel_Context");
+        ArrayList<String> positionItems =new ArrayList<>();
+        positionItems.add("AccelerationX");
+        positionItems.add("AccelerationY");
+        positionItems.add("AccelerationZ");
+        positionItems.add("RollRate");
+        positionItems.add("PitchRate");
+        positionItems.add("YawRate");
+        positionItems.add("Roll");
+        positionItems.add("Pitch");
+        positionItems.add("Yaw");
+        positionItems.add("SpeedNorth");
+        positionItems.add("SpeedEast");
+        positionItems.add("SpeedDown");
+        positionItems.add("LatitudeWgs84");
+        positionItems.add("LongitudeWgs84");
+        positionItems.add("AltitudeWgs84Geoid");
+        positionItems.add("AltitudeAgl");
+        positionItems.add("CourseOverGround");
+        positionItems.add("SpeedOverGround");
+        positionItems.add("TouchdownFlag");
+
+        JSONDebugDataReadRequest jsonDebugDataReadRequest  = new JSONDebugDataReadRequest();
+
+        for(String item: positionItems){
+            position.add(item);
+            jsonDebugDataReadRequest.addRecordElement(position);
+            position.removeLast();
+        }
+        position.removeLast();
+        position.add("SYS_ControlHandler_Context");
+        jsonDebugDataReadRequest.addRecordElement(position);
+        sender.sendMessage(jsonDebugDataReadRequest.toString().getBytes());
+    }
+
     private void createUDPReceiver() {
         receiver =  new UDPReceiver(socket, messageHandler);
         Thread threadReceiver = new Thread(receiver, "ClientReceiver");

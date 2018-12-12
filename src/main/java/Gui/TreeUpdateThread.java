@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class TreeUpdateThread extends Thread {
     private TreeView viewer;
     private TextField timeField;
-    private boolean working = false;
+    private boolean working = true;
 
     public TreeUpdateThread(TreeView treeView, TextField timeField){
         this.viewer = treeView;
@@ -25,12 +25,14 @@ public class TreeUpdateThread extends Thread {
     @Override
     public void run() {
         while (!this.isInterrupted()){
+            //Magie
             Platform.runLater(new Runnable() {
-                @Override
+                    @Override
                 public void run() {
-                        if(working){
-                            updateTree();
-                            updateTimeField();
+                    if (working) {
+                        //Greifen beide auf JavaFX Elemente zu
+                        updateTree();
+                        updateTimeField();
                     }
                 }
             });
