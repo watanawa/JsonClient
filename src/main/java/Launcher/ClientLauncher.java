@@ -82,6 +82,13 @@ public class ClientLauncher {
         position.removeLast();
         position.add("SYS_ControlHandler_Context");
         jsonDebugDataReadRequest.addRecordElement(position);
+
+        //RecoveryREason
+        position.removeLast();
+        position.add("GCS_Stanag4586Output_Context");
+        position.add("Stanag61000");
+        position.add("Stanag61000ReasonForRecovery");
+        jsonDebugDataReadRequest.addRecordElement(position);
         sender.sendMessage(jsonDebugDataReadRequest.toString().getBytes());
     }
 
